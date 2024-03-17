@@ -1,0 +1,33 @@
+CREATE TABLE IF NOT EXISTS companies (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    isin VARCHAR(12) UNIQUE NOT NULL, 
+    asset_name VARCHAR(255) NOT NULL,
+    description TEXT,
+    country_of_exposure VARCHAR(255),
+    inst_type VARCHAR(255) NOT NULL,
+    market_cap DECIMAL(15, 2)
+);
+
+CREATE TABLE IF NOT EXISTS asset_prices (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    company_id INT NOT NULL,
+    date DATE NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY(company_id) REFERENCES companies(id)
+);
+
+CREATE TABLE IF NOT EXISTS media_sentiments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    company_id INT NOT NULL,
+    extracted_sentiment TEXT NOT NULL,
+    date DATE NOT NULL,
+    sentiment_type TINYINT(1) NOT NULL,
+    FOREIGN KEY(company_id) REFERENCES companies(id)
+);
+
+CREATE TABLE IF NOT EXISTS sentiment_sources (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    media_sentiment_id INT NOT NULL,
+    source_link VARCHAR(2083) NOT NULL,
+    FOREIGN KEY(media_sentiment_id) REFERENCES media_sentiments(id)
+);
